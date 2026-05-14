@@ -17,19 +17,23 @@ import { paymentMiddleware, type Network } from "x402-next";
 const PAY_TO = (process.env.PAY_TO ??
   "0x0000000000000000000000000000000000000000") as `0x${string}`;
 
-const NETWORK = (process.env.NEXT_PUBLIC_NETWORK ?? "base-sepolia") as Network;
+const NETWORK = (process.env.NEXT_PUBLIC_NETWORK ?? "base") as Network;
 
 // On testnet, the public x402.org facilitator is used by default.
 // For mainnet ("base") set FACILITATOR_URL to e.g.
 //   https://facilitator.payai.network  (no auth)
 //   https://api.cdp.coinbase.com/platform/v2/x402  (requires CDP keys)
-const FACILITATOR_URL = process.env.FACILITATOR_URL;
+// For mainnet we default to the PayAI facilitator (no auth, mainnet capable).
+// Override with FACILITATOR_URL if you want CDP or another provider.
+const FACILITATOR_URL =
+  process.env.FACILITATOR_URL ??
+  (NETWORK === "base" ? "https://facilitator.payai.network" : undefined);
 
 export const middleware = paymentMiddleware(
   PAY_TO,
   {
     "/api/course-registration": {
-      price: "$0.01",
+      price: "$0.001",
       network: NETWORK,
       config: {
         description:

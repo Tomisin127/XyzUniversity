@@ -220,7 +220,7 @@ function UnpaidPanel({
           Settle on-chain via x402
         </p>
         <p className="mt-2 text-sm leading-relaxed">
-          For this demo the fee is symbolic ($0.01 USDC on Base) so you can walk
+          For this demo the fee is symbolic ($0.001 USDC on Base mainnet) so you can walk
           through the full flow end-to-end. The real invoice above is shown for
           UX fidelity only.
         </p>
