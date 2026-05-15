@@ -4,6 +4,7 @@ import { useState } from "react";
 import {
   AlertTriangle,
   Bot,
+  Copy,
   Loader2,
   Lock,
   ShieldCheck,
@@ -215,13 +216,71 @@ export function PaywallPanel({
 
       {/* RIGHT: agent / API */}
       <aside className="lg:col-span-2">
-        <AgentPanel price={price} />
+        <AgentPanel price={price} network={network} student={student} />
       </aside>
     </div>
   );
 }
 
-function AgentPanel({ price }: { price: string }) {
+function AgentPanel({
+  price,
+  network,
+  student,
+}: {
+  price: string;
+  network: string;
+  student: Student;
+}) {
+  const [endpoint, setEndpoint] = useState("/api/course-registration");
+  const [copied, setCopied] = useState(false);
+
+  // Resolve to an absolute URL on the client so the prompt is paste-ready.
+  if (typeof window !== "undefined" && endpoint.startsWith("/")) {
+    const abs = `${window.location.origin}/api/course-registration`;
+    if (abs !== endpoint) setEndpoint(abs);
+  }
+
+  const prompt = `You are my XYZ University registration agent.
+
+ENDPOINT: ${endpoint}
+NETWORK:  ${network}
+PRICE:    ${price} per call
+STUDENT:  ${student.fullName} (${student.matric})
+
+What I need you to do:
+1. GET ${endpoint}.
+2. The server responds with HTTP 402 and a JSON
+   body describing the payment requirements.
+   Parse "accepts[0]" — it tells you the scheme,
+   network, asset, price and payTo address.
+3. Using my connected wallet (or an x402-aware
+   HTTP client like x402-fetch), sign the
+   authorization for the amount and attach it as
+   the X-PAYMENT header.
+4. Retry the GET. You should now receive 200 OK
+   with the full course catalogue.
+5. Show me the courses grouped by department.
+   Ask me which course codes to register and make
+   sure my total units land between 15 and 24.
+6. Once I confirm, POST ${endpoint}
+   with body: { "matric_no": "${student.matric}",
+   "student_name": "${student.fullName}",
+   "course_codes": [ ...the codes I picked ] }.
+7. Read back the registration_id so I can quote
+   it at the registrar.
+
+If anything fails, show me the raw response.`;
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(prompt);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      /* ignore */
+    }
+  };
+
   return (
     <div className="rounded-xl border border-border bg-card/40">
       <div className="flex items-center justify-between border-b border-border px-5 py-3">
@@ -234,35 +293,30 @@ function AgentPanel({ price }: { price: string }) {
         </span>
       </div>
 
-      <div className="space-y-4 p-5 text-sm leading-relaxed text-muted-foreground">
-        <p>
-          You don&apos;t have to pay yourself. Ask your AI agent — Claude,
-          ChatGPT, or any wallet-enabled assistant — to settle the bursary
-          invoice and walk you through registration.
+      <div className="space-y-4 p-5">
+        <p className="text-sm leading-relaxed text-muted-foreground">
+          Paste this prompt into Claude or any wallet-enabled assistant. It
+          will settle the invoice from its wallet, fetch your course catalogue,
+          and walk you through registration.
         </p>
-        <p>
-          Tell it:{" "}
-          <span className="text-foreground">
-            &quot;Pay my XYZ University school fees of {price} from my wallet
-            and help me register my courses.&quot;
-          </span>{" "}
-          Once the payment clears, the agent will be handed your course
-          worksheet and can ask you which courses to enrol in.
-        </p>
-        <ul className="space-y-2 rounded-md border border-border bg-background/60 p-4 text-xs">
-          <li className="flex items-start gap-2">
-            <span className="mt-0.5 text-primary">•</span>
-            Works with any wallet-enabled assistant.
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="mt-0.5 text-primary">•</span>
-            Agent signs the payment; we never see your keys.
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="mt-0.5 text-primary">•</span>
-            You confirm every course before submission.
-          </li>
-        </ul>
+
+        <div className="rounded-md border border-border bg-background/80">
+          <div className="flex items-center justify-between border-b border-border px-3 py-2">
+            <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+              Agent prompt
+            </span>
+            <button
+              onClick={copy}
+              className="inline-flex items-center gap-1 rounded border border-border px-2 py-1 text-[11px] text-muted-foreground hover:text-primary"
+            >
+              <Copy className="h-3 w-3" />
+              {copied ? "Copied" : "Copy prompt"}
+            </button>
+          </div>
+          <pre className="max-h-72 overflow-auto whitespace-pre p-3 font-mono text-[11px] leading-relaxed text-muted-foreground">
+            {prompt}
+          </pre>
+        </div>
       </div>
     </div>
   );
