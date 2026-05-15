@@ -44,14 +44,6 @@ export function PortalHeader({ subtitle }: { subtitle?: string }) {
           <Link href="/register" className="hover:text-foreground">
             Course Registration
           </Link>
-          <a
-            href="/api/course-registration"
-            target="_blank"
-            rel="noreferrer"
-            className="font-mono text-xs hover:text-primary"
-          >
-            /api/course-registration
-          </a>
         </nav>
 
         <div className="flex items-center gap-3">

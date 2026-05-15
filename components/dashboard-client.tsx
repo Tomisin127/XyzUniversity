@@ -113,9 +113,9 @@ export function DashboardClient() {
               </p>
             </li>
             <li>
-              <p className="font-medium">x402 payment rails now live.</p>
+              <p className="font-medium">Wallet payments accepted.</p>
               <p className="mt-1 text-xs text-muted-foreground">
-                Pay directly from a self-custodial wallet — no card needed.
+                Pay your fees directly from a self-custodial wallet — no card needed.
               </p>
             </li>
             <li>
@@ -217,12 +217,12 @@ function UnpaidPanel({
 
       <div className="mt-6 rounded-lg border border-border bg-background/60 p-4">
         <p className="text-xs uppercase tracking-wider text-muted-foreground">
-          Settle on-chain via x402
+          Settle via crypto wallet
         </p>
         <p className="mt-2 text-sm leading-relaxed">
-          For this demo the fee is symbolic ($0.001 USDC on Base mainnet) so you can walk
-          through the full flow end-to-end. The real invoice above is shown for
-          UX fidelity only.
+          The bursary accepts stablecoin payments directly from a self-custodial
+          wallet. Continue to confirm the invoice and unlock your registration
+          page.
         </p>
         <Link
           href="/register"

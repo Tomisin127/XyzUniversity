@@ -53,8 +53,8 @@ export default function HomePage() {
               {[
                 {
                   icon: ShieldCheck,
-                  title: "HTTP 402",
-                  body: "Settled on Base via x402.",
+                  title: "Secure",
+                  body: "Verified bursary settlement.",
                 },
                 {
                   icon: Wallet,
@@ -98,8 +98,8 @@ export default function HomePage() {
                 </h2>
               </div>
               <p className="hidden max-w-sm text-sm leading-relaxed text-muted-foreground md:block">
-                The course registration endpoint is protected by an HTTP 402
-                payment wall. No payment, no courses.
+                Course registration is locked behind your school fees. No
+                payment, no courses.
               </p>
             </div>
 
@@ -113,7 +113,7 @@ export default function HomePage() {
                 {
                   k: "02",
                   title: "Pay school fees",
-                  body: "Connect a wallet on Base — middleware verifies on-chain.",
+                  body: "Connect a wallet — the bursary verifies your payment instantly.",
                 },
                 {
                   k: "03",
@@ -146,23 +146,24 @@ export default function HomePage() {
                   Hand your registration off to an autonomous agent.
                 </h2>
                 <p className="mt-4 text-pretty leading-relaxed text-muted-foreground">
-                  Point any x402-aware agent at the endpoint below. It will
-                  receive an HTTP 402 with payment requirements, settle the
-                  fees from its own wallet, and stream back the course
-                  catalogue. You then pick the courses you want to register.
+                  Once signed in, ask any wallet-enabled assistant — Claude,
+                  ChatGPT, or your own agent — to settle the bursary invoice
+                  and walk you through course selection. The agent pays from
+                  its own wallet, receives the course catalogue, and asks you
+                  which courses to enrol in before submitting.
                 </p>
                 <ul className="mt-6 space-y-2 text-sm text-muted-foreground">
                   <li className="flex items-start gap-2">
                     <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-                    Standard HTTP — no custom SDK required.
+                    Works with any wallet-enabled AI assistant.
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-                    Settled on Base via a public x402 facilitator.
+                    Agent pays directly — we never custody funds.
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-                    Same endpoint serves humans and agents.
+                    You confirm every course before submission.
                   </li>
                 </ul>
               </div>
@@ -172,23 +173,25 @@ export default function HomePage() {
                   <div className="flex items-center gap-2">
                     <BrandMark size={20} />
                     <span className="font-mono text-xs text-muted-foreground">
-                      curl
+                      Agent brief
                     </span>
                   </div>
-                  <span className="font-mono text-xs text-primary">x402</span>
+                  <span className="font-mono text-xs text-primary">
+                    paste &amp; go
+                  </span>
                 </div>
-                <pre className="overflow-x-auto p-4 font-mono text-xs leading-relaxed text-muted-foreground">
-                  <code>{`# 1. Discover payment requirements
-curl -i https://xyz-university.app/api/course-registration
-# => HTTP/1.1 402 Payment Required
-# => x-payment-required: { "scheme": "exact", ... }
-
-# 2. Agent signs USDC payment on Base, retries
-curl https://xyz-university.app/api/course-registration \\
-  -H "x-payment: <signed-eip3009-authorization>"
-# => 200 OK
-# => { courses: [...], constraints: {...} }`}</code>
-                </pre>
+                <div className="space-y-3 p-5 text-sm leading-relaxed text-muted-foreground">
+                  <p className="text-foreground">
+                    &ldquo;Pay my XYZ University school fees from my wallet and
+                    help me register my courses for this semester.&rdquo;
+                  </p>
+                  <p>
+                    Sign in first, then open Course Registration. Your agent
+                    will be guided through payment, shown the available
+                    courses, and ask which ones to enrol you in. You stay in
+                    control of every confirmation.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -203,7 +206,7 @@ curl https://xyz-university.app/api/course-registration \\
             Computing
           </p>
           <p className="mt-2">
-            Anti-fraud & x402 verification powered by on-chain settlement.
+            Bursary settlement verified on-chain. We never custody your funds.
           </p>
         </footer>
       </main>
